@@ -2,6 +2,10 @@ import type { Register, RenderElement } from 'claude-code'
 
 const SHORT_NOTE_CHARS = 160
 
+// Soft tints for a light theme. A background adds no characters, so text selected with the mouse copies clean.
+const YOU_BG = '#E8EFF7'
+const CLAUDE_BG = '#F7EEE6'
+
 const isShortNote = (text: string): boolean => !text.includes('\n') && text.length <= SHORT_NOTE_CHARS
 
 export const register: Register = (on, options) => {
@@ -10,7 +14,7 @@ export const register: Register = (on, options) => {
   on('ui.render', { component: 'UserMessage' }, ($, e, next) => {
     if (e.surface !== 'terminal' || e.props.origin.kind !== 'composer' || !e.props.text.trim()) return next(e)
     const { Box, Text } = $.ui.resolve(e)
-    return framed(Box, Text, 'You', 'suggestion', <Text>{e.props.text.trim()}</Text>)
+    return labeled(Box, Text, 'You', 'suggestion', YOU_BG, <Text>{e.props.text.trim()}</Text>)
   })
 
   on('ui.render', { component: 'AssistantMessage' }, ($, e, next) => {
@@ -26,23 +30,22 @@ export const register: Register = (on, options) => {
         </Box>
       )
     }
-    return framed(Box, Text, 'Claude', 'claude', <Markdown text={text} />)
+    return labeled(Box, Text, 'Claude', 'claude', CLAUDE_BG, <Markdown text={text} />)
   })
-
 }
 
 type Element = (props: Record<string, unknown>, ...children: unknown[]) => RenderElement
 
-function framed(Box: Element, Text: Element, title: string, color: string, body: RenderElement): RenderElement {
+// A colored label line, then the message on a tinted background. No borders or side padding,
+// which a mouse selection would copy along with the text.
+function labeled(Box: Element, Text: Element, title: string, color: string, bg: string, body: RenderElement): RenderElement {
   return (
     <Box flexDirection="column" marginTop={1}>
-      <Box flexDirection="column" borderStyle="round" borderColor={color} paddingX={1}>
+      <Text color={color} bold>
+        {title}
+      </Text>
+      <Box flexDirection="column" backgroundColor={bg}>
         {body}
-      </Box>
-      <Box position="absolute" top={0} left={2}>
-        <Text color={color} bold>
-          {` ${title} `}
-        </Text>
       </Box>
     </Box>
   )

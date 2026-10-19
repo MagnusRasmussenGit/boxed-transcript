@@ -30,13 +30,21 @@ const mountPrompt = ($: Engine, surface: 'terminal' | 'desktop', text: string, o
 
 const fromEngine = { type: 'Text', text: 'engine:' } as const
 
+const YOU_BG = '#E8EFF7'
+const CLAUDE_BG = '#F7EEE6'
+
+// Borders and side padding are drawn as characters that a mouse selection copies along with the text
+const copiesAlong = (b: { props: Record<string, unknown> }): boolean =>
+  Boolean(b.props.borderStyle || b.props.paddingX || b.props.padding)
+
 describe('your messages', () => {
-  test('sit in a box labeled You', async ($, on) => {
+  test('sit under a You label, on a tinted background', async ($, on) => {
     engineBeneath(on)
     const ui = await mountPrompt($, 'terminal', '  fix the login bug  ')
     const boxes = await ui.findAll({ type: 'Box' })
-    expect(boxes.some(b => b.props.borderStyle === 'round' && b.props.borderColor === 'suggestion')).toBe(true)
-    expect((await ui.find({ type: 'Text', text: 'You' }))?.text).toBe(' You ')
+    expect(boxes.some(b => b.props.backgroundColor === YOU_BG)).toBe(true)
+    expect(boxes.some(copiesAlong)).toBe(false)
+    expect((await ui.find({ type: 'Text', text: 'You' }))?.props).toMatchObject({ color: 'suggestion', bold: true })
     expect((await ui.find({ type: 'Text', text: 'login' }))?.text).toBe('fix the login bug')
     expect(await ui.find(fromEngine)).toBeUndefined()
   })
@@ -52,12 +60,13 @@ describe('your messages', () => {
 })
 
 describe("Claude's text", () => {
-  test('an answer sits in a box labeled Claude, bold included, rendered by the engine as markdown', async ($, on) => {
+  test('an answer sits under a Claude label on a tinted background, bold included, rendered by the engine as markdown', async ($, on) => {
     engineBeneath(on)
     const ui = await mountReply($, 'terminal', ANSWER)
     const boxes = await ui.findAll({ type: 'Box' })
-    expect(boxes.some(b => b.props.borderStyle === 'round' && b.props.borderColor === 'claude')).toBe(true)
-    expect((await ui.find({ type: 'Text', text: 'Claude' }))?.text).toBe(' Claude ')
+    expect(boxes.some(b => b.props.backgroundColor === CLAUDE_BG)).toBe(true)
+    expect(boxes.some(copiesAlong)).toBe(false)
+    expect((await ui.find({ type: 'Text', text: 'Claude' }))?.props).toMatchObject({ color: 'claude', bold: true })
     expect((await ui.findAll({ type: 'Markdown' })).map(m => m.text)).toEqual([ANSWER])
   })
 
@@ -76,9 +85,9 @@ describe("Claude's text", () => {
     }
   })
 
-  test('with boxes set to all, notes are boxed too', { options: { boxes: 'all' } }, async ($, on) => {
+  test('with boxes set to all, notes are tinted too', { options: { boxes: 'all' } }, async ($, on) => {
     engineBeneath(on)
     const ui = await mountReply($, 'terminal', NOTE)
-    expect((await ui.findAll({ type: 'Box' })).some(b => b.props.borderColor === 'claude')).toBe(true)
+    expect((await ui.findAll({ type: 'Box' })).some(b => b.props.backgroundColor === CLAUDE_BG)).toBe(true)
   })
 })

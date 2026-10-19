@@ -1,7 +1,7 @@
 {
   "name": "readable-layout-plain",
-  "version": "0.1.0",
-  "description": "Lays out the terminal transcript so it reads like a conversation: your messages and Claude's answers in labeled boxes, and Claude's work as quiet lines between them. Based on readable-layout by Garvit Nangru, without the bold-text recoloring or the end-of-turn rule.",
+  "version": "0.2.0",
+  "description": "Lays out the terminal transcript so it reads like a conversation: your messages and Claude's answers under colored labels on a soft background, and Claude's work as quiet lines between them. Based on readable-layout by Garvit Nangru, without the bold-text recoloring or the end-of-turn rule.",
   "author": {
     "name": "Magnus Rasmussen",
     "url": "https://github.com/MagnusRasmussenGit"
@@ -13,8 +13,8 @@
   "userConfig": {
     "boxes": {
       "type": "string",
-      "title": "Claude text to box",
-      "description": "answers boxes replies of more than a line or two and shows one-line notes as quiet lines; all boxes everything Claude writes",
+      "title": "Claude text to label",
+      "description": "answers labels and tints replies of more than a line or two and shows one-line notes as quiet lines; all labels and tints everything Claude writes",
       "default": "answers",
       "options": ["answers", "all"]
     }
