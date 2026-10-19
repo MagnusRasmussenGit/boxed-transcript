@@ -1,0 +1,17 @@
+{
+  "name": "readable-layout-plain",
+  "owner": {
+    "name": "Magnus Rasmussen",
+    "url": "https://github.com/MagnusRasmussenGit"
+  },
+  "metadata": {
+    "description": "Readable Layout for Claude Code without the bold-text recoloring or the end-of-turn rule."
+  },
+  "plugins": [
+    {
+      "name": "readable-layout-plain",
+      "source": "./",
+      "description": "Lays the terminal out like a conversation: labeled boxes for you and Claude, and quiet lines for Claude's work."
+    }
+  ]
+}
