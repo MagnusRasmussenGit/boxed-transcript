@@ -11,7 +11,7 @@
     {
       "name": "readable-layout-plain",
       "source": "./",
-      "description": "Lays the terminal out like a conversation: colored labels and soft backgrounds for you and Claude, and quiet lines for Claude's work."
+      "description": "Puts your messages in a box labeled You, so each prompt stands out in the terminal transcript."
     }
   ]
 }

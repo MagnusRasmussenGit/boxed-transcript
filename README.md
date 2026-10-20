@@ -1,16 +1,8 @@
 # Readable Layout (plain)
 
-A trimmed version of [Readable Layout](https://github.com/GarvitNangru/claude-code-mods/tree/main/mods/readable-layout) by Garvit Nangru (MIT). It keeps the conversation layout and drops the bold-text recoloring, so every message is rendered by Claude Code's own markdown renderer.
+A trimmed version of [Readable Layout](https://github.com/GarvitNangru/claude-code-mods/tree/main/mods/readable-layout) by Garvit Nangru (MIT). It keeps one part of it: your messages sit in a box labeled **You**, in your theme's blue, so you can see at a glance where each of your prompts starts.
 
-## What changes
-
-- **Your messages** sit under a **You** label in your theme's blue, on a soft blue background.
-- **Claude's answers** sit under a **Claude** label in Claude's orange, on a soft warm background. Anything longer than a line or two counts as an answer.
-- **Claude's short notes** between steps become quiet, indented lines with a blank line above each one.
-
-Messages have no borders or side padding, so text you select with the mouse copies without extra characters. The background tints are made for a light theme.
-
-Bold text, code blocks, tables, quotes, everything else inside a message, and the end-of-turn line look exactly as they do in stock Claude Code.
+Everything else is drawn by Claude Code as usual: Claude's responses, tool activity, shell commands, notifications and the end-of-turn line. Claude's responses keep Claude Code's own mouse selection, which leaves out the bullet and indent, so copying from them stays clean.
 
 ## Installing
 
@@ -24,26 +16,14 @@ It asks whether to add this repo as a marketplace. Say `y` and pick a scope; the
 
 To update it later, run `claude plugin update readable-layout-plain@readable-layout-plain`, then `/reload-plugins` in an open session. To remove it, run `/plugin uninstall readable-layout-plain@readable-layout-plain`.
 
-## Settings
-
-`Claude text to label` in `/config`:
-
-- `answers` (the default) labels and tints replies of more than a line or two and shows one-line notes as quiet lines.
-- `all` labels and tints everything Claude writes, notes included.
-
-For a mod loaded from a folder, set it in `~/.claude/settings.json`:
-
-```json
-{ "pluginConfigs": { "readable-layout-plain": { "options": { "boxes": "all" } } } }
-```
-
 ## Differences from the original
 
-- `hooks/markdown.tsx` is removed. Message text goes straight to the built-in `<Markdown>` component.
-- The `bold` setting is removed.
+- Only your messages are boxed. Claude's responses are left to Claude Code, because a box around them gets copied along with the text when you select it with the mouse.
+- `hooks/markdown.tsx` and the `bold` setting are removed: bold text looks as it does in stock Claude Code.
+- The `boxes` setting is removed, as Claude's text is no longer boxed.
 - The custom end-of-turn rule is removed, so Claude Code's own turn-duration line is shown.
-- Bordered boxes are replaced by a label and a background tint, so copying text with the mouse doesn't pick up border characters.
-- The bold-text and end-of-turn tests are removed.
+
+Shell commands run with `!` can't be boxed: Claude Code draws those rows itself and doesn't pass them to mods.
 
 ## Development
 
