@@ -11,8 +11,6 @@ Boxes your messages and Claude's answers in the Claude Code terminal, so you can
 
 In the classic layout (`/tui default`) Claude's answers are left as Claude Code draws them: there the terminal does the selecting, and would copy the box along with the text. Your messages are boxed in both layouts.
 
-Everything else is drawn by Claude Code as usual: tool activity, notifications and the end-of-turn line.
-
 ## Installing
 
 Type this at the Claude Code prompt:
@@ -24,21 +22,6 @@ Type this at the Claude Code prompt:
 It asks whether to add this repo as a marketplace. Say `y` and pick a scope; the user scope loads it in every session.
 
 To update it later, run `claude plugin update boxed-transcript@boxed-transcript`, then `/reload-plugins` in an open session. To remove it, run `/plugin uninstall boxed-transcript@boxed-transcript`.
-
-## What a mod can't change
-
-Claude Code draws these itself and doesn't pass them to mods:
-
-- shell commands run with `!`
-- the sticky copy of your last prompt at the top of the screen, shown once the prompt has scrolled out of view
-- the pane's own border, which is why the pane doesn't help in the classic layout
-
-## Differences from the original
-
-- `hooks/markdown.tsx` and the `bold` setting are removed: bold text looks as it does in stock Claude Code.
-- The `boxes` setting is removed. Short notes are always left to Claude Code.
-- The custom end-of-turn rule is removed, so Claude Code's own turn-duration line is shown.
-- Added: the clickable Claude label, the response pane and the copy buttons for code blocks.
 
 ## Development
 
