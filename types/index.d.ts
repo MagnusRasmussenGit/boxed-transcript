@@ -3,7 +3,7 @@ export type ResponseText = string
 
 declare module 'claude-code' {
   interface PluginState {
-    'readable-layout-plain': {
+    'boxed-transcript': {
       // The text the response pane shows
       shown: ResponseText
     }

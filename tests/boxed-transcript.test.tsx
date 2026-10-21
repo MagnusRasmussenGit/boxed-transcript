@@ -2,7 +2,7 @@ import { describe, expect, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 import type { On, PromptOrigin } from 'claude-code'
 
-const PLUGIN = 'readable-layout-plain'
+const PLUGIN = 'boxed-transcript'
 const ANSWER = 'Both are done.\n\n- **Agent Monitor** is pushed\n- **Ember** is applied'
 const NOTE = 'Checking the config first:'
 

@@ -6,7 +6,7 @@ const PANE = 'response'
 const PANE_TITLE = "Claude's response"
 
 // The text the pane shows
-const shown = atom({ plugin: 'readable-layout-plain', key: 'shown' } as const, '')
+const shown = atom({ plugin: 'boxed-transcript', key: 'shown' } as const, '')
 
 const isShortNote = (text: string): boolean => !text.includes('\n') && text.length <= SHORT_NOTE_CHARS
 
@@ -16,9 +16,9 @@ const isShortNote = (text: string): boolean => !text.includes('\n') && text.leng
 type Segment = { kind: 'text'; text: string } | { kind: 'code'; fenced: string; code: string; language: string }
 
 const FENCE_OPEN = /^(`{3,}|~{3,})\s*([^\s`]*)/
-// Behind a code block while its copy button is hovered, to show what the button copies.
-// A soft blue made for a light theme.
-const COPY_HOVER_BG = '#DDE7F7'
+// Behind a code block while its copy button is hovered, to show what the button copies:
+// the theme's own mouse-selection color, so it suits light and dark themes alike.
+const COPY_HOVER_BG = 'selectionBg'
 
 function splitAtCodeBlocks(text: string): Segment[] {
   const segments: Segment[] = []

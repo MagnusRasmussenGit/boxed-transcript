@@ -1,15 +1,15 @@
 {
-  "name": "readable-layout-plain",
+  "name": "boxed-transcript",
   "owner": {
     "name": "Magnus Rasmussen",
     "url": "https://github.com/MagnusRasmussenGit"
   },
   "metadata": {
-    "description": "Readable Layout for Claude Code without the bold-text recoloring or the end-of-turn rule."
+    "description": "Boxes for your messages and Claude's answers in the Claude Code terminal, with clean ways to copy from them."
   },
   "plugins": [
     {
-      "name": "readable-layout-plain",
+      "name": "boxed-transcript",
       "source": "./",
       "description": "Boxes your messages and Claude's answers, and opens an answer in a pane to copy from."
     }
