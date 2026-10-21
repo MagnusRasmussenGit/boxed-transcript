@@ -1,6 +1,6 @@
 {
   "name": "boxed-transcript",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Boxes your messages and Claude's answers in the terminal transcript, opens an answer in a pane to copy from when you click its Claude label, and adds a copy button under each code block. Based on readable-layout by Garvit Nangru.",
   "author": {
     "name": "Magnus Rasmussen",

@@ -17,8 +17,9 @@ type Segment = { kind: 'text'; text: string } | { kind: 'code'; fenced: string; 
 
 const FENCE_OPEN = /^(`{3,}|~{3,})\s*([^\s`]*)/
 // Behind a code block while its copy button is hovered, to show what the button copies:
-// the theme's own mouse-selection color, so it suits light and dark themes alike.
-const COPY_HOVER_BG = 'selectionBg'
+// the theme's own hover tint, so it suits light and dark themes alike. Not the selection
+// color, which would hide a mouse selection made in the block.
+const COPY_HOVER_BG = 'userMessageBackgroundHover'
 
 function splitAtCodeBlocks(text: string): Segment[] {
   const segments: Segment[] = []
