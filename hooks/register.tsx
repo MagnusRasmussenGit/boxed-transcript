@@ -10,6 +10,47 @@ const shown = atom({ plugin: 'readable-layout-plain', key: 'shown' } as const, '
 
 const isShortNote = (text: string): boolean => !text.includes('\n') && text.length <= SHORT_NOTE_CHARS
 
+// An answer cut at its code blocks, so each block can get a copy button under it. Only fences at
+// the start of a line count: one indented inside a list item stays in the text, as splitting the
+// list around it would break the list.
+type Segment = { kind: 'text'; text: string } | { kind: 'code'; fenced: string; code: string; language: string }
+
+const FENCE_OPEN = /^(`{3,}|~{3,})\s*([^\s`]*)/
+// Behind a code block while its copy button is hovered, to show what the button copies.
+// A soft blue made for a light theme.
+const COPY_HOVER_BG = '#DDE7F7'
+
+function splitAtCodeBlocks(text: string): Segment[] {
+  const segments: Segment[] = []
+  const lines = text.split('\n')
+  let prose: string[] = []
+  const flushProse = () => {
+    if (prose.join('\n').trim()) segments.push({ kind: 'text', text: prose.join('\n').trim() })
+    prose = []
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const open = FENCE_OPEN.exec(lines[i] ?? '')
+    const marker = open?.[1]
+    const close = marker && lines.findIndex((line, j) => j > i && new RegExp(`^${marker[0]}{${marker.length},}\\s*$`).test(line))
+    // An unclosed fence (an answer still streaming) stays text until it closes
+    if (!marker || !close || close < 0) {
+      prose.push(lines[i] ?? '')
+      continue
+    }
+    flushProse()
+    segments.push({
+      kind: 'code',
+      fenced: lines.slice(i, close + 1).join('\n'),
+      code: lines.slice(i + 1, close).join('\n'),
+      language: open?.[2] ?? '',
+    })
+    i = close
+  }
+  flushProse()
+  return segments
+}
+
 async function showInPane($: EngineInterface, text: string): Promise<void> {
   await update($, shown, () => text)
   await $.ui.open({ id: PANE, title: PANE_TITLE, focus: true, closeOnEscape: true })
@@ -45,7 +86,47 @@ export const register: Register = on => {
         </Text>
       </Button>
     )
-    return framed(Box, 'claude', label, <Markdown text={text} />)
+    const segments = splitAtCodeBlocks(text)
+    if (!segments.some(s => s.kind === 'code')) return framed(Box, 'claude', label, <Markdown text={text} />)
+
+    let blocks = 0
+    const body = (
+      <Box flexDirection="column">
+        {segments.map((segment, i) => {
+          if (segment.kind === 'text') {
+            return (
+              <Box flexDirection="column" marginTop={i ? 1 : 0}>
+                <Markdown text={segment.text} />
+              </Box>
+            )
+          }
+          const { code, language } = segment
+          const n = blocks++
+          // One hover group per block: the button and its code light together. A group spans
+          // the whole surface, so the message's id keeps blocks of different answers apart.
+          const scope = `${e.requestId.slice(-48)}:code-${n}`
+          return (
+            <Box flexDirection="column" marginTop={i ? 1 : 0}>
+              <Box flexDirection="column" hover={{ scope, backgroundColor: COPY_HOVER_BG }}>
+                <Markdown text={segment.fenced} />
+              </Box>
+              <Box>
+                <Button
+                  key={`copy-${n}`}
+                  hover={{ scope }}
+                  label={language ? `Copy ${language}` : 'Copy'}
+                  onPress={async press => {
+                    const copied = await $.ui.copy({ text: code, surface: press.surface })
+                    await $.ui.toast(copied.isCopied ? 'Copied the code block.' : `Could not copy: ${copied.reason}`)
+                  }}
+                />
+              </Box>
+            </Box>
+          )
+        })}
+      </Box>
+    )
+    return framed(Box, 'claude', label, body)
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {

@@ -132,6 +132,44 @@ describe("Claude's text", () => {
   })
 })
 
+describe('copy buttons for code blocks', () => {
+  const QUERY = 'SELECT id, email\nFROM users\nWHERE active = true;'
+  const SQL_ANSWER = `Here is the query:\n\n\`\`\`sql\n${QUERY}\n\`\`\`\n\nIt returns active users.`
+
+  test('a code block gets a button that copies just the code', async ($, on) => {
+    const seen = engineBeneath(on)
+    const ui = await mountReply($, 'terminal', SQL_ANSWER)
+    expect((await ui.findAll({ type: 'Markdown' })).map(m => m.text)).toEqual([
+      'Here is the query:',
+      `\`\`\`sql\n${QUERY}\n\`\`\``,
+      'It returns active users.',
+    ])
+    expect((await ui.find({ type: 'Button', key: 'copy-0' }))?.props).toMatchObject({ label: 'Copy sql' })
+
+    await ui.press({ key: 'copy-0' })
+    expect(seen.copied).toEqual([QUERY])
+    expect(seen.toasts).toEqual(['Copied the code block.'])
+  })
+
+  test('each block gets its own button; one with no language is just Copy', async ($, on) => {
+    const seen = engineBeneath(on)
+    const ui = await mountReply($, 'terminal', 'Run:\n\n```\nnpm test\n```\n\nThen:\n\n~~~bash\ngit push\n~~~')
+    expect((await ui.find({ type: 'Button', key: 'copy-0' }))?.props).toMatchObject({ label: 'Copy' })
+    expect((await ui.find({ type: 'Button', key: 'copy-1' }))?.props).toMatchObject({ label: 'Copy bash' })
+    await ui.press({ key: 'copy-1' })
+    expect(seen.copied).toEqual(['git push'])
+  })
+
+  test('an indented block inside a list, or one still streaming, gets no button', async ($, on) => {
+    engineBeneath(on)
+    for (const text of ['1. Run this:\n   ```\n   npm test\n   ```\n2. Done', 'Here it comes:\n\n```sql\nSELECT 1']) {
+      const ui = await mountReply($, 'terminal', text)
+      expect((await ui.findAll({ type: 'Markdown' })).map(m => m.text)).toEqual([text])
+      expect(await ui.find({ type: 'Button', key: 'copy-0' })).toBeUndefined()
+    }
+  })
+})
+
 describe('the response pane', () => {
   test('pressing the Claude label opens that answer in the pane', async ($, on) => {
     const seen = engineBeneath(on)

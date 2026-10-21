@@ -2,3 +2,6 @@
 .claude-plugin/types/
 node_modules/
 Thumbs.db
+
+# Rider / JetBrains project settings
+.idea/

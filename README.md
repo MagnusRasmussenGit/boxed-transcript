@@ -7,6 +7,7 @@ A trimmed version of [Readable Layout](https://github.com/GarvitNangru/claude-co
 - **Your messages** sit in a box labeled **You**, in your theme's blue.
 - **Claude's answers** sit in a box labeled **Claude**, in Claude's orange, in the fullscreen layout. Short notes between steps (one line, up to 160 characters) are left as Claude Code draws them.
 - **Click the Claude label** to open that answer in a pane, where it copies without the box around it. Select text there, or press `c` for **Copy all**, which copies the answer's markdown and closes the pane. `q` or Esc closes it.
+- **Code blocks get a copy button** under them, named by the block's language (`[ Copy sql ]`). Clicking it copies just the code, without the fences. Hovering the button gives its code block a soft blue background, so you see what it copies; the color is made for a light theme. Code blocks indented inside a list item get no button, as the list would break around it.
 
 In the classic layout (`/tui default`) Claude's answers are left as Claude Code draws them: there the terminal does the selecting, and would copy the box along with the text. Your messages are boxed in both layouts.
 
@@ -37,7 +38,7 @@ Claude Code draws these itself and doesn't pass them to mods:
 - `hooks/markdown.tsx` and the `bold` setting are removed: bold text looks as it does in stock Claude Code.
 - The `boxes` setting is removed. Short notes are always left to Claude Code.
 - The custom end-of-turn rule is removed, so Claude Code's own turn-duration line is shown.
-- Added: the clickable Claude label and the response pane.
+- Added: the clickable Claude label, the response pane and the copy buttons for code blocks.
 
 ## Development
 
