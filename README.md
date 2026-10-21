@@ -1,8 +1,16 @@
 # Readable Layout (plain)
 
-A trimmed version of [Readable Layout](https://github.com/GarvitNangru/claude-code-mods/tree/main/mods/readable-layout) by Garvit Nangru (MIT). It keeps one part of it: your messages sit in a box labeled **You**, in your theme's blue, so you can see at a glance where each of your prompts starts.
+A trimmed version of [Readable Layout](https://github.com/GarvitNangru/claude-code-mods/tree/main/mods/readable-layout) by Garvit Nangru (MIT). It boxes your messages and Claude's answers so you can see at a glance who is talking, and lets you open an answer in a pane to copy from it.
 
-Everything else is drawn by Claude Code as usual: Claude's responses, tool activity, shell commands, notifications and the end-of-turn line. Claude's responses keep Claude Code's own mouse selection, which leaves out the bullet and indent, so copying from them stays clean.
+## What changes
+
+- **Your messages** sit in a box labeled **You**, in your theme's blue.
+- **Claude's answers** sit in a box labeled **Claude**, in Claude's orange, in the fullscreen layout. Short notes between steps (one line, up to 160 characters) are left as Claude Code draws them.
+- **Click the Claude label** to open that answer in a pane, where it copies without the box around it. Select text there, or press `c` for **Copy all**, which copies the answer's markdown and closes the pane. `q` or Esc closes it.
+
+In the classic layout (`/tui default`) Claude's answers are left as Claude Code draws them: there the terminal does the selecting, and would copy the box along with the text. Your messages are boxed in both layouts.
+
+Everything else is drawn by Claude Code as usual: tool activity, notifications and the end-of-turn line.
 
 ## Installing
 
@@ -16,14 +24,20 @@ It asks whether to add this repo as a marketplace. Say `y` and pick a scope; the
 
 To update it later, run `claude plugin update readable-layout-plain@readable-layout-plain`, then `/reload-plugins` in an open session. To remove it, run `/plugin uninstall readable-layout-plain@readable-layout-plain`.
 
+## What a mod can't change
+
+Claude Code draws these itself and doesn't pass them to mods:
+
+- shell commands run with `!`
+- the sticky copy of your last prompt at the top of the screen, shown once the prompt has scrolled out of view
+- the pane's own border, which is why the pane doesn't help in the classic layout
+
 ## Differences from the original
 
-- Only your messages are boxed. Claude's responses are left to Claude Code, because a box around them gets copied along with the text when you select it with the mouse.
 - `hooks/markdown.tsx` and the `bold` setting are removed: bold text looks as it does in stock Claude Code.
-- The `boxes` setting is removed, as Claude's text is no longer boxed.
+- The `boxes` setting is removed. Short notes are always left to Claude Code.
 - The custom end-of-turn rule is removed, so Claude Code's own turn-duration line is shown.
-
-Shell commands run with `!` can't be boxed: Claude Code draws those rows itself and doesn't pass them to mods.
+- Added: the clickable Claude label and the response pane.
 
 ## Development
 

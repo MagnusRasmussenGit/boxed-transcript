@@ -1,7 +1,7 @@
 {
   "name": "readable-layout-plain",
-  "version": "0.3.0",
-  "description": "Puts your messages in a box labeled You, so each prompt stands out in the terminal transcript. Based on readable-layout by Garvit Nangru, with everything else left to Claude Code.",
+  "version": "0.4.0",
+  "description": "Boxes your messages and Claude's answers in the terminal transcript, and opens an answer in a pane to copy from when you click its Claude label. Based on readable-layout by Garvit Nangru.",
   "author": {
     "name": "Magnus Rasmussen",
     "url": "https://github.com/MagnusRasmussenGit"
@@ -9,5 +9,6 @@
   "homepage": "https://github.com/MagnusRasmussenGit/readable-layout-plain",
   "repository": "https://github.com/MagnusRasmussenGit/readable-layout-plain",
   "license": "MIT",
-  "keywords": ["readability", "layout", "terminal", "transcript", "boxes"]
+  "keywords": ["readability", "layout", "terminal", "transcript", "boxes"],
+  "types": "./types/index.d.ts"
 }

@@ -11,7 +11,7 @@
     {
       "name": "readable-layout-plain",
       "source": "./",
-      "description": "Puts your messages in a box labeled You, so each prompt stands out in the terminal transcript."
+      "description": "Boxes your messages and Claude's answers, and opens an answer in a pane to copy from."
     }
   ]
 }
