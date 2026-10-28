@@ -79,9 +79,11 @@ export const register: Register = on => {
     if (isShortNote(text)) return next(e)
     const { Box, Text, Button, Markdown } = $.ui.resolve(e)
 
-    // The label is a button: pressing it opens this answer in a pane, where it copies clean
+    // The label is a button: pressing it opens this answer in a pane, where it copies clean.
+    // The handler returns the work instead of dropping it: a pane is only placed below 144
+    // columns when its open is part of answering the click, which a dropped promise is not.
     const label = (
-      <Button key="open" plain onPress={() => void showInPane($, text)}>
+      <Button key="open" plain onPress={() => showInPane($, text)}>
         <Text color="claude" bold>
           {' Claude '}
         </Text>
@@ -146,7 +148,7 @@ export const register: Register = on => {
               if (copied.isCopied) await $.ui.close({ id: PANE })
             }}
           />
-          <Button key="close" label="Close (q)" hotkey="q" role="dismiss" onPress={() => void $.ui.close({ id: PANE })} />
+          <Button key="close" label="Close (q)" hotkey="q" role="dismiss" onPress={() => $.ui.close({ id: PANE })} />
         </Box>
         <Box marginTop={1} flexDirection="column" paddingRight={2}>
           <Markdown text={text} />
